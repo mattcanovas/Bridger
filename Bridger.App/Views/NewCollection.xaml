@@ -1,0 +1,37 @@
+<Window x:Class="Bridger.App.Views.NewCollection"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Bridger.App.Views"
+        xmlns:viewModel="clr-namespace:Bridger.App.ViewModels"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        mc:Ignorable="d"
+        Title="NewCollection" Width="450" Height="180">
+    <Window.DataContext>
+        <viewModel:NewCollectionViewModel />
+    </Window.DataContext>
+    <Border BorderBrush="Gray" BorderThickness="1" Background="White" CornerRadius="20">
+        <Grid Margin="25" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+        
+            <Label Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="3" Content="Nome da coleção"></Label>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0, 10, 0, 20" FontSize="20" Text="{Binding CollectionName}" />
+            <Button Grid.Row="2" Grid.Column="0" Content="Criar" IsDefault="True" Click="ButtonCriar_OnClick" Command="{Binding SaveCollectionCommand}"/>
+            <Button Grid.Row="2" Grid.Column="2" Content="Cancelar" IsCancel="True" Click="ButtonCancelar_OnClick"/>
+        </Grid>
+    </Border>
+</Window>

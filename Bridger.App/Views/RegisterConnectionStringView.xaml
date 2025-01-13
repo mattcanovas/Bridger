@@ -1,0 +1,37 @@
+<mah:MetroWindow x:Class="Bridger.App.Views.RegisterConnectionStringView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Bridger.App.Views"
+        xmlns:viewModel="clr-namespace:Bridger.App.ViewModels"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="BRIDGER - Version 0.0.1" Height="200" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Image Source="../Assets/flyover-icon.png" Width="22" Height="22" Margin="2" />
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+    <Window.DataContext>
+        <viewModel:RegisterConnectionStringViewModel />
+    </Window.DataContext>
+    <Border Background="White" BorderBrush="LightGray" BorderThickness="1" CornerRadius="20">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> 
+                <RowDefinition Height="Auto"/> 
+                <RowDefinition Height="Auto"/> 
+            </Grid.RowDefinitions>
+        
+            <Label Grid.Row="0" Grid.Column="0" Content="Insira o ConnectionString do banco de dados MongoDB" />
+            <TextBox Grid.Row="1" Grid.Column="0" Margin="0, 10, 0, 20" Text="{Binding ConnectionString, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            <Button Grid.Row="2" Grid.Column="0" Content="Pronto" IsDefault="True" Command="{Binding SaveConnectionString}" Click="Pronto_OnClick"/>
+        </Grid>
+    </Border>
+</mah:MetroWindow>
