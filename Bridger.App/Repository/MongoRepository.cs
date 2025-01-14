@@ -17,10 +17,6 @@ public abstract class MongoRepository {
         }
 
         var client = new MongoClient(ConnectionString);
-        DatabaseName = "DATABASE: bridger";
-        var index = ConnectionString.IndexOf($"@", StringComparison.Ordinal);
-        var indexOfBar = ConnectionString.IndexOf("/", index, StringComparison.Ordinal);
-        Host = $"HOST: {ConnectionString.Substring(index, indexOfBar - index)}";
-        return client.GetDatabase("bridger");
+        return client.GetDatabase("MTS");
     }
 }

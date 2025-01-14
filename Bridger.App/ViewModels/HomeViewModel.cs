@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Bridger.App.Repository;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -85,43 +86,29 @@ public class HomeViewModel : ViewModelBase {
     private ICommand? BridgeJsonToDbCommandProperty { get; set; }
 
     public ICommand? BridgeJsonToDbCommand => BridgeJsonToDbCommandProperty ??= new RelayCommand(() => {
-            try
-            {
-                var json = Json.Trim().Replace("\r\n", string.Empty);
-                var data = JObject.Parse(json);
-                if (!data.ContainsKey(JsonAttribute))
-                {
-                    throw new ArgumentException("O atributo JSON informado não foi encontrado. Tente novamente");
-                }
-
-                var jsonAttribute = data[JsonAttribute]!.ToList();
-                if (jsonAttribute.Count > 0)
-                {
-                    foreach (var model in jsonAttribute.Select(obj => new BsonDocument() {
-                                 { JsonAttribute, obj.ToString() },
-                                 { "DataInsercao", DateTime.UtcNow }
-                             }))
-                    {
-                        MongoRepository.GetDatabase().GetCollection<BsonDocument>(CollectionSelected)
-                            .InsertOne(model);
-                    }
-                }
-                else
-                {
-                    MongoRepository.GetDatabase().GetCollection<BsonDocument>(CollectionSelected).InsertOne(
-                        new BsonDocument() {
-                            { JsonAttribute, data[JsonAttribute]!.ToString() },
-                            { "DataInsercao", DateTime.UtcNow }
-                        });
-                }
-
-                MessageBox.Show("Todos os registros foram importados com sucesso ao banco de dados", "Sucesso!",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+        try {
+            var json = Json.Trim().Replace("\r\n", string.Empty);
+            var data = JObject.Parse(json);
+            if (!data.ContainsKey(JsonAttribute)) {
+                throw new ArgumentException("O atributo JSON informado não foi encontrado. Tente novamente");
             }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            var jsonAttribute = data[JsonAttribute]!.ToList();
+            if (jsonAttribute.Count > 0) {
+                foreach (var model in jsonAttribute.Select(obj => BsonDocument.Parse(obj.ToString()))) {
+                    MongoRepository.GetDatabase().GetCollection<BsonDocument>(CollectionSelected)
+                        .InsertOne(model);
+                }
+            } else {
+                MongoRepository.GetDatabase().GetCollection<BsonDocument>(CollectionSelected).InsertOne(
+                    BsonDocument.Parse(data[JsonAttribute]!.ToString()));
             }
-        },
+
+            MessageBox.Show("Todos os registros foram importados com sucesso ao banco de dados", "Sucesso!",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        } catch (Exception e) {
+            MessageBox.Show(e.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    },
         () => !string.IsNullOrEmpty(CollectionSelected) && !string.IsNullOrEmpty(JsonAttribute));
 }
